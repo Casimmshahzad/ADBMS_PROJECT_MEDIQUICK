@@ -1,13 +1,5 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/(register|login|add-medicine|search|reserve|save-track|reservations/.*)",
-      "destination": "/api/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "framework": "create-react-app",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build"
 }
