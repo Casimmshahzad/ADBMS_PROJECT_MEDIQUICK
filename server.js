@@ -109,4 +109,8 @@ app.post('/save-track', async (req, res) => {
     res.json(user.savedMeds);
 });
 
-app.listen(5000, () => console.log("🚀 Server on 5000"));
+// --- 7. SERVER PORT BINDING ---
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
