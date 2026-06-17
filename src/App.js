@@ -43,7 +43,8 @@ const AuthView = ({ roleType, setUser, setAuthRole }) => {
         if (!form.username || !form.password) return alert("Fill in credentials");
         const endpoint = isLogin ? '/login' : '/register';
         try {
-            const res = await axios.post(`http://localhost:5000${endpoint}`, { ...form, role: roleType });
+            // Updated localhost to your live Vercel API endpoint
+            const res = await axios.post(`https://adbms-project-mediquick.vercel.app/api${endpoint}`, { ...form, role: roleType });
             if (isLogin) {
                 setUser(res.data.user);
                 setAuthRole(null);
@@ -87,7 +88,8 @@ const CustomerView = ({ logout, user }) => {
 
     const fetchMyReservations = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/reservations/customer/${user._id}`);
+            // Updated endpoint to live URL
+            const res = await axios.get(`https://adbms-project-mediquick.vercel.app/api/reservations/customer/${user._id}`);
             setMyReservations(res.data);
         } catch (err) { console.error("Failed fetching customer reservations"); }
     };
@@ -95,20 +97,23 @@ const CustomerView = ({ logout, user }) => {
     useEffect(() => { fetchMyReservations(); }, []);
 
     const handleSearch = async () => {
-        const res = await axios.get(`http://localhost:5000/search?name=${query}`);
+        // Updated endpoint to live URL
+        const res = await axios.get(`https://adbms-project-mediquick.vercel.app/api/search?name=${query}`);
         setResults(res.data);
     };
 
     const addTrack = async () => {
         if (!trackForm.medName || !trackForm.qty || !trackForm.daily) return alert("Fill all fields");
-        const res = await axios.post('http://localhost:5000/save-track', { ...trackForm, userId: user._id });
+        // Updated endpoint to live URL
+        const res = await axios.post('https://adbms-project-mediquick.vercel.app/api/save-track', { ...trackForm, userId: user._id });
         setTracker(res.data);
         setTrackForm({ medName: '', qty: '', daily: '' });
     };
 
     const reserveMed = async (medId) => {
         try {
-            await axios.post('http://localhost:5000/reserve', { userId: user._id, medicineId: medId });
+            // Updated endpoint to live URL
+            await axios.post('https://adbms-project-mediquick.vercel.app/api/reserve', { userId: user._id, medicineId: medId });
             alert("Reservation placed successfully!");
             fetchMyReservations();
         } catch (err) { alert("Could not complete reservation"); }
@@ -116,7 +121,8 @@ const CustomerView = ({ logout, user }) => {
 
     const cancelReservation = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/reserve/${id}`);
+            // Updated endpoint to live URL
+            await axios.delete(`https://adbms-project-mediquick.vercel.app/api/reserve/${id}`);
             fetchMyReservations();
         } catch (err) { alert("Could not cancel reservation"); }
     };
@@ -194,14 +200,16 @@ const ShopkeeperView = ({ logout, user }) => {
 
     const fetchInv = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/search?pharmacyId=${user._id}`);
+            // Updated endpoint to live URL
+            const res = await axios.get(`https://adbms-project-mediquick.vercel.app/api/search?pharmacyId=${user._id}`);
             setInventory(res.data);
         } catch (err) { console.error("Fetch inventory failed"); }
     };
 
     const fetchReservations = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/reservations/pharmacy/${user._id}`);
+            // Updated endpoint to live URL
+            const res = await axios.get(`https://adbms-project-mediquick.vercel.app/api/reservations/pharmacy/${user._id}`);
             setReservations(res.data);
         } catch (err) { console.error("Fetch reservations failed"); }
     };
@@ -214,7 +222,8 @@ const ShopkeeperView = ({ logout, user }) => {
     const addStock = async () => {
         if (!newMed.name || !newMed.price) return alert("Enter name and price");
         try {
-            await axios.post('http://localhost:5000/add-medicine', { 
+            // Updated endpoint to live URL
+            await axios.post('https://adbms-project-mediquick.vercel.app/api/add-medicine', { 
                 ...newMed, 
                 pharmacyId: user._id, 
                 pharmacyName: user.pharmacyName, 
@@ -227,7 +236,8 @@ const ShopkeeperView = ({ logout, user }) => {
 
     const dismissReservation = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/reserve/${id}`);
+            // Updated endpoint to live URL
+            await axios.delete(`https://adbms-project-mediquick.vercel.app/api/reserve/${id}`);
             fetchReservations();
         } catch (err) { alert("Could not dismiss reservation"); }
     };
@@ -253,7 +263,7 @@ const ShopkeeperView = ({ logout, user }) => {
                 {reservations.length === 0 ? <p>No current holding requests.</p> : reservations.map(res => (
                     <div key={res._id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 0', borderBottom: '1px solid #f0e0a0' }}>
                         <div>
-                            👤 <b>{res.userId?.username}</b> requested to reserve 💊 <b>{res.medicineId?.name}</b>
+                            <b>👤 {res.userId?.username}</b> requested to reserve 💊 <b>{res.medicineId?.name}</b>
                         </div>
                         <button onClick={() => dismissReservation(res._id)} style={{ background: '#e74c3c', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}>Dismiss</button>
                     </div>
